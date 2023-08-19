@@ -28,9 +28,9 @@ public class ImageSetController {
     @Autowired
     IImageSetPatchUseCase patchUseCase ;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<ImageSetDto>> get(@PathVariable String id){
-        return getUseCase.get(id);
+    @GetMapping("")
+    public ResponseEntity<List<ImageSetDto>> get(@RequestParam Map<String, String> allParams){
+        return getUseCase.get(allParams);
     }
 
     @PostMapping()

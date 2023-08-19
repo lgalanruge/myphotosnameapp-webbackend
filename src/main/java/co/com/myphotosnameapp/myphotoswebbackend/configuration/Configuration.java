@@ -10,7 +10,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsConfiguration;
+import  org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
+import org.springframework.web.cors.reactive.CorsWebFilter;
+
+import java.text.SimpleDateFormat;
 import java.util.Optional;
 
 @Slf4j
@@ -37,5 +42,13 @@ public class Configuration {
         Optional<OwnerDto> owner = service.getOwnerById("3");
         return owner.get();
     }
+
+    @Bean
+    public SimpleDateFormat formatDate(){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format ;
+    }
+
+
 
 }

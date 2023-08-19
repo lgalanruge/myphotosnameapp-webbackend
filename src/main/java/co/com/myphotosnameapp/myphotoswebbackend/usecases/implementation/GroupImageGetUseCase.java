@@ -1,8 +1,9 @@
 package co.com.myphotosnameapp.myphotoswebbackend.usecases.implementation;
 
+import co.com.myphotosnameapp.myphotoswebbackend.dtos.GroupImageDto;
 import co.com.myphotosnameapp.myphotoswebbackend.dtos.ImageSetDto;
 import co.com.myphotosnameapp.myphotoswebbackend.services.IImageSetService;
-import co.com.myphotosnameapp.myphotoswebbackend.usecases.IImageSetGetUseCase;
+import co.com.myphotosnameapp.myphotoswebbackend.usecases.IGroupImageGetUseCase;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,13 +13,17 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class ImageSetGetUseCase implements IImageSetGetUseCase {
+public class GroupImageGetUseCase implements IGroupImageGetUseCase {
+
 
     @Autowired
     IImageSetService service ;
@@ -26,28 +31,10 @@ public class ImageSetGetUseCase implements IImageSetGetUseCase {
     @Autowired
     SimpleDateFormat formatDate ;
 
-    private ResponseEntity<List<ImageSetDto>> get(String id) {
-        try{
-            List<ImageSetDto> list = service.read(id);
-            if(!list.isEmpty())
-                return ResponseEntity.ok(list);
-            else
-                return ResponseEntity.notFound().build();
-        }catch (Exception e){
-
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-    }
-
     @Override
-    public ResponseEntity<List<ImageSetDto>> get(Map<String, String> allParams) {
+    public ResponseEntity<Set<GroupImageDto>> get(Map<String, String> allParams) {
         if(allParams == null || allParams.isEmpty())
             return new ResponseEntity(HttpStatus.NOT_FOUND);
-
-        if(allParams.containsKey("id")){
-            return get(allParams.get("id"));
-        }
 
         ImageSetDto dto = new ImageSetDto();
         allParams.forEach((key, value) -> {
@@ -92,7 +79,20 @@ public class ImageSetGetUseCase implements IImageSetGetUseCase {
         List<ImageSetDto> list = service.searchImageSetDtos(dto);
         if (list.isEmpty())
             return new ResponseEntity(HttpStatus.NOT_FOUND);
-        else
-            return ResponseEntity.ok(list);
+        else{
+            Set<GroupImageDto> listMap =
+                    list
+                            .stream()
+                            .map(value -> {
+                                GroupImageDto groupImageDto = new GroupImageDto();
+                                groupImageDto.setImageSourceId(value.getImageSourceId());
+                                groupImageDto.setName(value.getName());
+                                groupImageDto.setStatus(value.getStatus());
+                                return groupImageDto;
+                            })
+                            .collect( Collectors.toSet() ) ;
+            return ResponseEntity.ok(listMap);
+        }
+
     }
 }
