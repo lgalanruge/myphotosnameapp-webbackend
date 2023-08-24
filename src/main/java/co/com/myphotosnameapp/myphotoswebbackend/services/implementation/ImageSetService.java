@@ -6,20 +6,23 @@ import co.com.myphotosnameapp.myphotoswebbackend.repositories.ImageSetRepository
 import co.com.myphotosnameapp.myphotoswebbackend.services.IImageSetService;
 import co.com.myphotosnameapp.myphotoswebbackend.utilities.IUtilityMapper;
 import co.com.myphotosnameapp.myphotoswebbackend.utilities.Utilities;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import jakarta.transaction.TransactionalException;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
+
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -31,6 +34,9 @@ public class ImageSetService implements IImageSetService {
 
     @Autowired
     IUtilityMapper mapper ;
+
+    @Autowired
+    private EntityManager entityManager;
 
 
     @Override
@@ -133,6 +139,56 @@ public class ImageSetService implements IImageSetService {
         }
 
     }
+
+    @Override
+    public List<ImageSetDto> searchImageSetDtos(ImageSetDto image) {
+        ImageSetEntity entity = mapper.toEntity(image);
+        List<ImageSetEntity> list = searchImageSetEntities(entity);
+        if (list.isEmpty())
+            return Collections.emptyList();
+        return list
+                .stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    private List<ImageSetEntity> searchImageSetEntities(ImageSetEntity image) {
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<ImageSetEntity> query = criteriaBuilder.createQuery(ImageSetEntity.class);
+        Root<ImageSetEntity> root = query.from(ImageSetEntity.class);
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (image.getImageSourceId() != null) {
+            predicates.add(criteriaBuilder.equal(root.get("imageSourceId"), image.getImageSourceId()));
+        }
+        if (image.getImageDestinationId() != null) {
+            predicates.add(criteriaBuilder.equal(root.get("imageDestinationId"), image.getImageDestinationId()));
+        }
+        if (image.getStatus() != null) {
+            predicates.add(criteriaBuilder.equal(root.get("status"), image.getStatus()));
+        }
+        if (image.getCreatedBy() != null) {
+            predicates.add(criteriaBuilder.equal(root.get("createdBy"), image.getCreatedBy()));
+        }
+        if (image.getCreatedDate() != null) {
+            LocalDateTime finishDate = image.getCreatedDate().plusDays(1);
+            predicates.add(criteriaBuilder.between(root.get("createdDate"), image.getCreatedDate(), finishDate));
+        }
+        if (image.getModifiedBy() != null) {
+            predicates.add(criteriaBuilder.equal(root.get("modifiedBy"), image.getModifiedBy()));
+        }
+        if (image.getModifiedDate()  != null ) {
+            predicates.add(criteriaBuilder.between(root.get("modifiedDate"), image.getModifiedDate(), LocalDateTime.now()));
+        }
+        if (image.getName() != null) {
+            predicates.add(criteriaBuilder.equal(root.get("name"), image.getName()));
+        }
+
+        query.select(root).where(predicates.toArray(new Predicate[0]));
+        return entityManager.createQuery(query).getResultList();
+    }
+
 
     private String getRealStringValue(String previousValue, String newValue){
         if(newValue == null){
