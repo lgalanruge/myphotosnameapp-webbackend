@@ -34,6 +34,9 @@ public class ImageSetDto {
     private transient java.util.Date creationDate;
 
     public Date getCreationDate(){
+        if(createdDate == null)
+            return new Date();
+
         ZoneId systemTimeZone = ZoneId.systemDefault();
         ZonedDateTime zonedDateTime = createdDate.atZone(systemTimeZone) ;
         creationDate = Date.from(zonedDateTime.toInstant());
