@@ -38,6 +38,16 @@ public class UtilityMapper implements IUtilityMapper {
     }
 
     @Override
+    public CeremonyDto toDto(CeremonyEntity entity) {
+        return MODEL_MAPPER.map(entity, CeremonyDto.class);
+    }
+
+    @Override
+    public RequestDto toDto(RequestEntity entity) {
+        return MODEL_MAPPER.map(entity, RequestDto.class);
+    }
+
+    @Override
     public CompanyEntity toEntity(CompanyDto dto) {
         return MODEL_MAPPER.map(dto, CompanyEntity.class);
     }
@@ -60,6 +70,16 @@ public class UtilityMapper implements IUtilityMapper {
     @Override
     public PersonEntity toEntity(PersonDto dto) {
         return MODEL_MAPPER.map(dto, PersonEntity.class);
+    }
+
+    @Override
+    public CeremonyEntity toEntity(CeremonyDto dto) {
+        return MODEL_MAPPER.map(dto, CeremonyEntity.class);
+    }
+
+    @Override
+    public RequestEntity toEntity(RequestDto dto) {
+        return MODEL_MAPPER.map(dto, RequestEntity.class);
     }
 
 }

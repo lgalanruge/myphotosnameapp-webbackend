@@ -1,12 +1,16 @@
 package co.com.myphotosnameapp.myphotoswebbackend.utilities;
 
+import io.azam.ulidj.ULID;
+
 import java.util.UUID;
 
 public class Utilities {
 
-    public static String getId(){
-        String value = UUID.randomUUID().toString();
-        value = value.replace("-", "");
-        return value.substring(2);
+    /**
+     * generate a new Id for PK
+     * @return
+     */
+    public static synchronized String getId(){
+        return ULID.random();
     }
 }

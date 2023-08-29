@@ -47,6 +47,13 @@
 			<version>3.1.0</version>
 		</dependency>
 
+		<!-- Dependency to generate Unique ID -->
+		<dependency>
+			<groupId>io.azam.ulidj</groupId>
+			<artifactId>ulidj</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

@@ -11,10 +11,20 @@ public interface IUtilityMapper {
     OwnerDto toDto(OwnerEntity entity);
     PersonDto toDto(PersonEntity entity);
 
+    CeremonyDto toDto(CeremonyEntity entity);
+
+    RequestDto toDto(RequestEntity entity);
+
+
     CompanyEntity  toEntity(CompanyDto dto);
     ImageEntity  toEntity(ImageDto dto);
     ImageSetEntity  toEntity(ImageSetDto dto);
     OwnerEntity  toEntity(OwnerDto dto);
     PersonEntity  toEntity(PersonDto dto);
+
+    CeremonyEntity  toEntity(CeremonyDto dto);
+
+    RequestEntity  toEntity(RequestDto dto);
+
 
 }
