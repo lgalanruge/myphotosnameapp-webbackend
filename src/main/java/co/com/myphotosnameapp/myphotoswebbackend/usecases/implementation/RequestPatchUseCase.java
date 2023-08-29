@@ -4,6 +4,7 @@ import co.com.myphotosnameapp.myphotoswebbackend.dtos.CeremonyDto;
 import co.com.myphotosnameapp.myphotoswebbackend.dtos.RequestDto;
 import co.com.myphotosnameapp.myphotoswebbackend.services.IRequestService;
 import co.com.myphotosnameapp.myphotoswebbackend.usecases.IRequestPatchUseCase;
+import co.com.myphotosnameapp.myphotoswebbackend.utilities.Utilities;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ public class RequestPatchUseCase implements IRequestPatchUseCase {
     @Autowired
     IRequestService service ;
 
+    String idProvider = Utilities.PROVIDER_ID ;
 
     @Override
     public ResponseEntity<Void> patch(String id, RequestDto request) {
@@ -32,9 +34,11 @@ public class RequestPatchUseCase implements IRequestPatchUseCase {
             }
             RequestDto old = requestOpt.get();
             old.setCustomerId(this.realValue(old.getCustomerId(), request.getCustomerId()));
-            old.setStatus(request.getStatus());
+            if(request.getStatus()!=null)
+                old.setStatus(request.getStatus());
+
             old.setCeremonyId(this.realValue(old.getCeremonyId(), request.getCeremonyId()));
-            old.setModifiedBy(request.getModifiedBy());
+            old.setModifiedBy(request.getModifiedBy()!= null ? request.getModifiedBy() : idProvider);
             old.setModifiedDate(LocalDateTime.now());
 
             service.update(old);

@@ -66,6 +66,15 @@ public class RequestService implements IRequestService {
             predicates.add(criteriaBuilder.between(root.get("createdDate"), requestDto.getCreatedDate(), finishDate));
         }
 
+        if (requestDto.getProviderId() != null) {
+            predicates.add(criteriaBuilder.equal(root.get("providerId"), requestDto.getProviderId()));
+        }
+
+        if (requestDto.getCustomerId() != null) {
+            predicates.add(criteriaBuilder.equal(root.get("customerId"), requestDto.getCustomerId()));
+        }
+
+
         query.select(root).where(predicates.toArray(new Predicate[0]));
         return entityManager
                 .createQuery(query)
@@ -107,11 +116,14 @@ public class RequestService implements IRequestService {
                 if (!isRequest.isPresent()) {
                     throw new IllegalArgumentException("Request id does not  Exist!");
                 }
+                RequestEntity entity = mapper.toEntity(requestDto);
+                entity.setCreatedBy(isRequest.get().getCreatedBy());
+                entity.setCreatedDate(isRequest.get().getCreatedDate());
+                entity.setModifiedDate(LocalDateTime.now());
+                repository.save(entity);
+                return entity.getId() ;
             }
-            RequestEntity entity = mapper.toEntity(requestDto);
-            entity.setModifiedDate(LocalDateTime.now());
-            repository.save(entity);
-            return entity.getId() ;
+            throw new IllegalArgumentException("Request Id is null!");
         }catch (Exception e){
             throw new TransactionalException(e.getMessage(), e);
         }

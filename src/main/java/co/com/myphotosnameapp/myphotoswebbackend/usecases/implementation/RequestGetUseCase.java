@@ -24,6 +24,10 @@ public class RequestGetUseCase implements IRequestGetUseCase{
     @Override
     public ResponseEntity<List<RequestDto>> get(Map<String, String> allParams) {
         RequestDto requestDto = new RequestDto();
+        if(allParams.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         allParams
                 .forEach(
                         (key, value) -> {
@@ -40,10 +44,10 @@ public class RequestGetUseCase implements IRequestGetUseCase{
                                 case ("createdDate"):
                                     requestDto.setCreatedDate(LocalDateTime.now());
                                     break;
-                                case ("provider_id"):
+                                case ("providerId"):
                                     requestDto.setProviderId(value);
                                     break;
-                                case ("customer_id"):
+                                case ("customerId"):
                                     requestDto.setCustomerId(value);
                                     break;
                                 case("page"):

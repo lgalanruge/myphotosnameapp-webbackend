@@ -24,6 +24,11 @@ public class CeremonyGetUseCase implements ICeremonyGetUseCase {
     @Override
     public ResponseEntity<List<CeremonyDto>> get(Map<String, String> allParams) {
         CeremonyDto ceremonyDto = new CeremonyDto();
+
+        if(allParams.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         allParams
                 .forEach(
                         (key, value) -> {
