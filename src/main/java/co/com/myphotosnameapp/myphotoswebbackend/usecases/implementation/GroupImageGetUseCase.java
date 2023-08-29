@@ -4,6 +4,7 @@ import co.com.myphotosnameapp.myphotoswebbackend.dtos.GroupImageDto;
 import co.com.myphotosnameapp.myphotoswebbackend.dtos.ImageSetDto;
 import co.com.myphotosnameapp.myphotoswebbackend.services.IImageSetService;
 import co.com.myphotosnameapp.myphotoswebbackend.usecases.IGroupImageGetUseCase;
+import co.com.myphotosnameapp.myphotoswebbackend.utilities.ImageProcessStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class GroupImageGetUseCase implements IGroupImageGetUseCase {
     @Override
     public ResponseEntity<Set<GroupImageDto>> get(Map<String, String> allParams) {
         if(allParams == null || allParams.isEmpty())
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         ImageSetDto dto = new ImageSetDto();
         allParams.forEach((key, value) -> {
@@ -52,7 +53,7 @@ public class GroupImageGetUseCase implements IGroupImageGetUseCase {
                     dto.setName(value);
                     break;
                 case "status":
-                    dto.setStatus(value);
+                    dto.setStatus(ImageProcessStatus.valueOf(value));
                     break;
                 case "createdBy":
                     dto.setCreatedBy(value);
@@ -72,13 +73,15 @@ public class GroupImageGetUseCase implements IGroupImageGetUseCase {
                         log.error(e.getMessage(),e);
                     }
                     break;
+                default:
+                    break;
             }
         });
         log.info("params: {}" , dto);
 
         List<ImageSetDto> list = service.searchImageSetDtos(dto);
         if (list.isEmpty())
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         else{
             Set<GroupImageDto> listMap =
                     list

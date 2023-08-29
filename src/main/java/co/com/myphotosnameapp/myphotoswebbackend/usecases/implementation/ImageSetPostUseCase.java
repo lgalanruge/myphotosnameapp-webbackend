@@ -17,17 +17,17 @@ import java.util.Map;
 public class ImageSetPostUseCase implements IImageSetPostUseCase {
 
     @Autowired
-    IImageSetService service ;
+    IImageSetService service;
 
     @Override
-    public ResponseEntity<Map<ImageSetDto, String>> post(List<ImageSetDto> imageList){
+    public ResponseEntity<Map<ImageSetDto, String>> post(List<ImageSetDto> imageList) {
         try {
             Map<ImageSetDto, String> maps = service.create(imageList);
-            return new ResponseEntity(HttpStatus.CREATED);
-        }catch (Exception e){
+            return new ResponseEntity<>(maps, HttpStatus.CREATED);
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 
 }

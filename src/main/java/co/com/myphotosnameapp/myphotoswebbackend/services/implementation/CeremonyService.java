@@ -4,7 +4,6 @@ import co.com.myphotosnameapp.myphotoswebbackend.dtos.CeremonyDto;
 import co.com.myphotosnameapp.myphotoswebbackend.entities.CeremonyEntity;
 import co.com.myphotosnameapp.myphotoswebbackend.repositories.CeremonyRepository;
 import co.com.myphotosnameapp.myphotoswebbackend.services.ICeremonyService;
-import co.com.myphotosnameapp.myphotoswebbackend.utilities.GenericStatus;
 import co.com.myphotosnameapp.myphotoswebbackend.utilities.IUtilityMapper;
 import co.com.myphotosnameapp.myphotoswebbackend.utilities.Utilities;
 import jakarta.persistence.EntityManager;
@@ -116,12 +115,16 @@ public class CeremonyService implements ICeremonyService {
                 if (!isCeremony.isPresent()) {
                     throw new IllegalArgumentException("Ceremony id does not  Exist!");
                 }
+                CeremonyEntity entity = mapper.toEntity(ceremonyDto);
+                entity.setCreatedDate(isCeremony.get().getCreatedDate());
+                entity.setCreatedBy(isCeremony.get().getCreatedBy());
+                entity.setModifiedDate(LocalDateTime.now());
+                repository.save(entity);
+                return entity.getId() ;
             }
-            CeremonyEntity entity = mapper.toEntity(ceremonyDto);
-            entity.setModifiedDate(LocalDateTime.now());
-            repository.save(entity);
-            return entity.getId() ;
+            throw new IllegalArgumentException("Ceremony ID is missing!");
         }catch (Exception e){
+            log.error(e.getMessage(), e);
             throw new TransactionalException(e.getMessage(), e);
         }
     }

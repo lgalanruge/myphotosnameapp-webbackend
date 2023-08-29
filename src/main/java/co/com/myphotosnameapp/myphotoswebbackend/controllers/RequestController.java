@@ -40,12 +40,12 @@ public class RequestController {
     }
 
     @PutMapping()
-    public ResponseEntity updateRequest(@RequestBody RequestDto requestDTO) {
+    public ResponseEntity<Void> updateRequest(@RequestBody RequestDto requestDTO) {
         return putUseCase.put(requestDTO);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity partialUpdateRequest(@PathVariable String id , @RequestBody RequestDto requestDTO) {
+    public ResponseEntity<Void> partialUpdateRequest(@PathVariable String id , @RequestBody RequestDto requestDTO) {
         return patchUseCase.patch(id, requestDTO);
     }
 }

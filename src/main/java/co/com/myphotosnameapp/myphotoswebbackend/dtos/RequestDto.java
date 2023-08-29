@@ -1,6 +1,6 @@
 package co.com.myphotosnameapp.myphotoswebbackend.dtos;
 
-import co.com.myphotosnameapp.myphotoswebbackend.utilities.GenericStatus;
+import co.com.myphotosnameapp.myphotoswebbackend.utilities.CeremonyStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -13,7 +13,7 @@ public class RequestDto {
 
     private String id;
 
-    private GenericStatus status;
+    private CeremonyStatus status;
 
     private String ceremonyId;
 

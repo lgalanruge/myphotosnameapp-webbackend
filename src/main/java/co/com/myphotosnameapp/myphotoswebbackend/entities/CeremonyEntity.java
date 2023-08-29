@@ -1,11 +1,13 @@
 package co.com.myphotosnameapp.myphotoswebbackend.entities;
 
 
-import co.com.myphotosnameapp.myphotoswebbackend.utilities.GenericStatus;
+import co.com.myphotosnameapp.myphotoswebbackend.utilities.CeremonyStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 @Entity
@@ -24,7 +26,7 @@ public class CeremonyEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 50)
-    private GenericStatus status;
+    private CeremonyStatus status;
 
     @Column(name = "created_by", length = 100, nullable = false)
     private String createdBy;
@@ -41,8 +43,14 @@ public class CeremonyEntity {
     @Column(name = "provider_id", length = 30)
     private String providerId;
 
-    @Column(name = "customer_id", length = 30)
-    private String customerId;
+    @Column(name = "event_date")
+    private LocalDate eventDate ;
+
+    @Column(name = "event_start_time")
+    private LocalTime eventStartTime ;
+
+    @Column(name = "event_finish_time")
+    private LocalTime eventFinishTime ;
 
 
 }

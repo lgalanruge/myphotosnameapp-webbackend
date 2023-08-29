@@ -1,5 +1,6 @@
 package co.com.myphotosnameapp.myphotoswebbackend.entities;
 
+import co.com.myphotosnameapp.myphotoswebbackend.utilities.ImageProcessStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -25,8 +26,9 @@ public class ImageSetEntity {
     @Column(name = "image_destination_id", length = 30)
     private String imageDestinationId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 50)
-    private String status;
+    private ImageProcessStatus status;
 
     @Column(name = "created_by", length = 100, nullable = false)
     private String createdBy;

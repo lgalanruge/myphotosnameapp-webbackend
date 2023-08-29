@@ -40,12 +40,12 @@ public class CeremonyController {
     }
 
     @PutMapping("")
-    public ResponseEntity updateCeremony(@RequestBody CeremonyDto ceremonyDTO) {
+    public ResponseEntity<Void> updateCeremony(@RequestBody CeremonyDto ceremonyDTO) {
         return putUseCase.put(ceremonyDTO);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity partialUpdateCeremony(@PathVariable String id, @RequestBody CeremonyDto ceremonyDTO) {
+    public ResponseEntity<Void> partialUpdateCeremony(@PathVariable String id, @RequestBody CeremonyDto ceremonyDTO) {
         return patchUseCase.patch(id, ceremonyDTO);
     }
 }

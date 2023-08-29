@@ -1,7 +1,7 @@
 package co.com.myphotosnameapp.myphotoswebbackend.entities;
 
 
-import co.com.myphotosnameapp.myphotoswebbackend.utilities.GenericStatus;
+import co.com.myphotosnameapp.myphotoswebbackend.utilities.CeremonyStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,7 +18,7 @@ public class RequestEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 50)
-    private GenericStatus status;
+    private CeremonyStatus status;
 
     @Column(name = "ceremony_id", length = 30)
     private String ceremonyId;

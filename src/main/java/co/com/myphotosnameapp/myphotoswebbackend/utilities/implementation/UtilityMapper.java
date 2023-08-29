@@ -13,11 +13,6 @@ public class UtilityMapper implements IUtilityMapper {
     private static final ModelMapper MODEL_MAPPER  = new ModelMapper();
 
     @Override
-    public CompanyDto toDto(CompanyEntity entity) {
-        return MODEL_MAPPER.map(entity, CompanyDto.class);
-    }
-
-    @Override
     public ImageDto toDto(ImageEntity entity) {
         return MODEL_MAPPER.map(entity, ImageDto.class);
     }
@@ -27,10 +22,6 @@ public class UtilityMapper implements IUtilityMapper {
         return MODEL_MAPPER.map(entity, ImageSetDto.class);
     }
 
-    @Override
-    public OwnerDto toDto(OwnerEntity entity) {
-        return MODEL_MAPPER.map(entity, OwnerDto.class);
-    }
 
     @Override
     public PersonDto toDto(PersonEntity entity) {
@@ -47,10 +38,6 @@ public class UtilityMapper implements IUtilityMapper {
         return MODEL_MAPPER.map(entity, RequestDto.class);
     }
 
-    @Override
-    public CompanyEntity toEntity(CompanyDto dto) {
-        return MODEL_MAPPER.map(dto, CompanyEntity.class);
-    }
 
     @Override
     public ImageEntity toEntity(ImageDto dto) {
@@ -62,10 +49,6 @@ public class UtilityMapper implements IUtilityMapper {
         return MODEL_MAPPER.map(dto, ImageSetEntity.class);
     }
 
-    @Override
-    public OwnerEntity toEntity(OwnerDto dto) {
-        return MODEL_MAPPER.map(dto, OwnerEntity.class);
-    }
 
     @Override
     public PersonEntity toEntity(PersonDto dto) {

@@ -1,11 +1,13 @@
 package co.com.myphotosnameapp.myphotoswebbackend.dtos;
 
+import co.com.myphotosnameapp.myphotoswebbackend.utilities.ImageProcessStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
+import org.springframework.data.annotation.Transient;
 
-import java.text.SimpleDateFormat;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -22,7 +24,7 @@ public class ImageSetDto {
 
     private String name;
 
-    private String status;
+    private ImageProcessStatus status;
 
     private String createdBy;
 
@@ -30,8 +32,9 @@ public class ImageSetDto {
     @JsonIgnore
     private LocalDateTime createdDate;
 
+    @Transient
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private transient java.util.Date creationDate;
+    private java.util.Date creationDate;
 
     public Date getCreationDate(){
         if(createdDate == null)

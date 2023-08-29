@@ -1,9 +1,9 @@
 package co.com.myphotosnameapp.myphotoswebbackend.usecases.implementation;
 
-import co.com.myphotosnameapp.myphotoswebbackend.dtos.CeremonyDto;
 import co.com.myphotosnameapp.myphotoswebbackend.dtos.RequestDto;
 import co.com.myphotosnameapp.myphotoswebbackend.services.IRequestService;
 import co.com.myphotosnameapp.myphotoswebbackend.usecases.IRequestGetUseCase;
+import co.com.myphotosnameapp.myphotoswebbackend.utilities.CeremonyStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +32,7 @@ public class RequestGetUseCase implements IRequestGetUseCase{
                                     requestDto.setId(value);
                                     break;
                                 case ("status"):
-                                    requestDto.setStatus(value);
+                                    requestDto.setStatus(CeremonyStatus.valueOf(value));
                                     break;
                                 case ("createdBy"):
                                     requestDto.setCreatedBy(value);

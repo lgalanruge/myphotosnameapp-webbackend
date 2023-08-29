@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface IRequestPutUseCase {
 
-    ResponseEntity put(RequestDto request);
+    ResponseEntity<Void> put(RequestDto request);
 
 
 }

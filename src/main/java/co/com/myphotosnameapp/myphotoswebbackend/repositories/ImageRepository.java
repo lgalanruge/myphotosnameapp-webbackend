@@ -1,8 +1,6 @@
 package co.com.myphotosnameapp.myphotoswebbackend.repositories;
 
-import co.com.myphotosnameapp.myphotoswebbackend.entities.CompanyEntity;
 import co.com.myphotosnameapp.myphotoswebbackend.entities.ImageEntity;
-import co.com.myphotosnameapp.myphotoswebbackend.entities.OwnerEntity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,18 +11,18 @@ import java.util.List;
 public interface ImageRepository extends JpaRepository<ImageEntity, String> {
 
 
-    public List<ImageEntity> findByNameAndCompany(String s, CompanyEntity company);
+    List<ImageEntity> findByNameAndProviderId(String s, String providerId);
 
-    public List<ImageEntity> findByStatusAndCompany(String status, CompanyEntity company);
+    List<ImageEntity> findByStatusAndProviderId(String status, String providerId);
 
-    public List<ImageEntity> findByOwner(OwnerEntity owner);
+    List<ImageEntity> findByCustomerId(String customerId);
 
-    public List<ImageEntity> findByCompany(CompanyEntity company);
+    List<ImageEntity> findByProviderId(String providerId);
 
 
-    public List<ImageEntity> findByCompanyAndSourceDirectory(CompanyEntity company, String sourceDirectory);
+    List<ImageEntity> findByProviderIdAndSourceDirectory(String providerId, String sourceDirectory);
 
-    public List<ImageEntity> findByCompanyAndNameAndSourceDirectory(CompanyEntity company, String name, String sourceDirectory);
+    List<ImageEntity> findByProviderIdAndNameAndSourceDirectory(String providerId, String name, String sourceDirectory);
 
 
 

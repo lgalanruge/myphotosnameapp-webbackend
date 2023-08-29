@@ -5,6 +5,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface ICeremonyPutUseCase {
 
-    ResponseEntity<String> put(CeremonyDto ceremonyDto);
+    ResponseEntity<Void> put(CeremonyDto ceremonyDto);
 
 }

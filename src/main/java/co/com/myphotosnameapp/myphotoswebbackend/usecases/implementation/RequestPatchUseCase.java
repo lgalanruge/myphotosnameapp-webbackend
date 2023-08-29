@@ -22,7 +22,7 @@ public class RequestPatchUseCase implements IRequestPatchUseCase {
 
 
     @Override
-    public ResponseEntity patch(String id, RequestDto request) {
+    public ResponseEntity<Void> patch(String id, RequestDto request) {
         try{
 
             Optional<RequestDto> requestOpt = service.read(id);
@@ -32,18 +32,18 @@ public class RequestPatchUseCase implements IRequestPatchUseCase {
             }
             RequestDto old = requestOpt.get();
             old.setCustomerId(this.realValue(old.getCustomerId(), request.getCustomerId()));
-            old.setStatus(this.realValue(old.getStatus(), request.getStatus()));
+            old.setStatus(request.getStatus());
             old.setCeremonyId(this.realValue(old.getCeremonyId(), request.getCeremonyId()));
             old.setModifiedBy(request.getModifiedBy());
             old.setModifiedDate(LocalDateTime.now());
 
             service.update(old);
 
-            return new ResponseEntity(HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }catch (Exception e){
             log.error(e.getMessage(), e);
         }
-        return new ResponseEntity(HttpStatus.NOT_MODIFIED);
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
     private String realValue(String oldValue, String newValue){

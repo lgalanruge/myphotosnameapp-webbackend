@@ -79,8 +79,8 @@ public class RequestService implements IRequestService {
     public String create(RequestDto requestDto) throws TransactionalException {
         try {
             if (requestDto.getId() != null) {
-                Optional<RequestDto> isCeremony = repository.findById(requestDto.getId());
-                if (isCeremony.isPresent()) {
+                Optional<RequestEntity> isRequest = repository.findById(requestDto.getId());
+                if (isRequest.isPresent()) {
                     throw new IllegalArgumentException("Request Id Exist!");
                 }
             }

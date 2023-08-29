@@ -15,13 +15,18 @@ public class MyPhotosWebBackendApplication {
 
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
+		final String url = "http://localhost:4200";
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/groupimage")
-						.allowedOrigins("http://localhost:4200");
+						.allowedOrigins(url);
 				registry.addMapping("/imageset")
-						.allowedOrigins("http://localhost:4200");
+						.allowedOrigins(url);
+				registry.addMapping("/ceremony")
+						.allowedOrigins(url);
+				registry.addMapping("/request")
+						.allowedOrigins(url);
 			}
 		};
 	}

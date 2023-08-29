@@ -5,6 +5,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface ICeremonyPatchUseCase {
 
-    ResponseEntity patch (String id, CeremonyDto ceremonyDto);
+    ResponseEntity<Void> patch (String id, CeremonyDto ceremonyDto);
 
 }

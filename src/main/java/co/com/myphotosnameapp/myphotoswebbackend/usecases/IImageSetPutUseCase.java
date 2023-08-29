@@ -6,6 +6,6 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface IImageSetPutUseCase {
-    ResponseEntity<ImageSetDto> put(List<ImageSetDto> imageSet);
+    ResponseEntity<Void> put(List<ImageSetDto> imageSet);
 
 }

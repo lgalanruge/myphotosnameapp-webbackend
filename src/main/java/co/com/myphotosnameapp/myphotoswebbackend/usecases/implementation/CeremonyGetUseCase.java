@@ -3,6 +3,7 @@ package co.com.myphotosnameapp.myphotoswebbackend.usecases.implementation;
 import co.com.myphotosnameapp.myphotoswebbackend.dtos.CeremonyDto;
 import co.com.myphotosnameapp.myphotoswebbackend.services.ICeremonyService;
 import co.com.myphotosnameapp.myphotoswebbackend.usecases.ICeremonyGetUseCase;
+import co.com.myphotosnameapp.myphotoswebbackend.utilities.CeremonyStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +35,7 @@ public class CeremonyGetUseCase implements ICeremonyGetUseCase {
                                     ceremonyDto.setTitle(value);
                                     break;
                                 case ("status"):
-                                    ceremonyDto.setStatus(value);
+                                    ceremonyDto.setStatus(CeremonyStatus.valueOf(value));
                                     break;
                                 case ("createdBy"):
                                     ceremonyDto.setCreatedBy(value);

@@ -1,16 +1,12 @@
 package co.com.myphotosnameapp.myphotoswebbackend.services.implementation;
 
-import co.com.myphotosnameapp.myphotoswebbackend.dtos.CompanyDto;
 import co.com.myphotosnameapp.myphotoswebbackend.dtos.ImageDto;
-import co.com.myphotosnameapp.myphotoswebbackend.dtos.OwnerDto;
-import co.com.myphotosnameapp.myphotoswebbackend.entities.CompanyEntity;
 import co.com.myphotosnameapp.myphotoswebbackend.entities.ImageEntity;
-import co.com.myphotosnameapp.myphotoswebbackend.entities.OwnerEntity;
 import co.com.myphotosnameapp.myphotoswebbackend.repositories.ImageRepository;
 import co.com.myphotosnameapp.myphotoswebbackend.services.IImageService;
 import co.com.myphotosnameapp.myphotoswebbackend.utilities.IUtilityMapper;
+import co.com.myphotosnameapp.myphotoswebbackend.utilities.Utilities;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,13 +24,7 @@ public class ImageService implements IImageService {
     @Autowired
     IUtilityMapper mapper ;
 
-    @Autowired
-    private CompanyDto getCompany ;
-
-    @Autowired
-    private OwnerDto getOwner ;
-
-
+    private String providerId = Utilities.PROVIDER_ID;
 
     @Override
     public Optional<ImageDto> getById(String id) {
@@ -47,65 +37,63 @@ public class ImageService implements IImageService {
 
     @Override
     public Optional<List<ImageDto>> getByName(String name) {
-        List<ImageEntity> image = repository.findByNameAndCompany(name, mapper.toEntity(getCompany));
+        List<ImageEntity> image = repository.findByNameAndProviderId(name, providerId);
         if(image.isEmpty())
             return Optional.empty();
         List<ImageDto> dto = image
                 .stream()
                 .map(value -> mapper.toDto(value))
-                .collect(Collectors.toList());
+                .toList();
         return Optional.of(dto);
     }
 
     @Override
     public Optional<List<ImageDto>> getByStatus(String status) {
-        List<ImageEntity> image = repository.findByStatusAndCompany (status, mapper.toEntity(getCompany));
+        List<ImageEntity> image = repository.findByStatusAndProviderId (status, providerId);
         if(image.isEmpty())
             return Optional.empty();
         List<ImageDto> dto = image
                 .stream()
                 .map(value -> mapper.toDto(value))
-                .collect(Collectors.toList());
+                .toList();
         return Optional.of(dto);
     }
 
     @Override
-    public Optional<List<ImageDto>> getByOwner(String owner) {
-        OwnerEntity own = new OwnerEntity();
-        own.setId(owner);
-        List<ImageEntity> image = repository.findByOwner(own);
+    public Optional<List<ImageDto>> getByCustomerId(String customerId) {
+
+        List<ImageEntity> image = repository.findByCustomerId(customerId);
         if(image.isEmpty())
             return Optional.empty();
         List<ImageDto> dto = image
                 .stream()
                 .map(value -> mapper.toDto(value))
-                .collect(Collectors.toList());
+                .toList();
         return Optional.of(dto);
     }
 
     @Override
-    public Optional<List<ImageDto>> getByCompany(String company) {
-        CompanyEntity comp = new CompanyEntity();
-        comp.setId(company);
-        List<ImageEntity> image = repository.findByCompany(comp);
+    public Optional<List<ImageDto>> getByProviderId(String providerId) {
+
+        List<ImageEntity> image = repository.findByProviderId(providerId);
         if(image.isEmpty())
             return Optional.empty();
         List<ImageDto> dto = image
                 .stream()
                 .map(value -> mapper.toDto(value))
-                .collect(Collectors.toList());
+                .toList();
         return Optional.of(dto);
     }
 
     @Override
     public Optional<List<ImageDto>> getBySourceDirectory(String sourceDirectory) {
-        List<ImageEntity> image = repository.findByCompanyAndSourceDirectory (mapper.toEntity(getCompany), sourceDirectory);
+        List<ImageEntity> image = repository.findByProviderIdAndSourceDirectory (providerId, sourceDirectory);
         if(image.isEmpty())
             return Optional.empty();
         List<ImageDto> dto = image
                 .stream()
                 .map(value -> mapper.toDto(value))
-                .collect(Collectors.toList());
+                .toList();
         return Optional.of(dto);
     }
 

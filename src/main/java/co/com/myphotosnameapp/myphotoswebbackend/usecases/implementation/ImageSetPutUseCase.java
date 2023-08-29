@@ -19,14 +19,14 @@ public class ImageSetPutUseCase implements IImageSetPutUseCase {
     IImageSetService service ;
 
     @Override
-    public ResponseEntity<ImageSetDto> put(List<ImageSetDto> imageSet){
+    public ResponseEntity<Void>put(List<ImageSetDto> imageSet){
         try {
             service.updateAll(imageSet);
-            return new ResponseEntity(HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }catch (Exception e){
             log.error(e.getMessage(), e);
         }
-        return new ResponseEntity(HttpStatus.NOT_MODIFIED);
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
 }

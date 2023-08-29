@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface IRequestPatchUseCase {
 
-    ResponseEntity patch(String id, RequestDto request);
+    ResponseEntity<Void> patch(String id, RequestDto request);
 
 
 }

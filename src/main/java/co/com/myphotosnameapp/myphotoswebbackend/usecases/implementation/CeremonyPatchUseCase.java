@@ -3,6 +3,7 @@ package co.com.myphotosnameapp.myphotoswebbackend.usecases.implementation;
 import co.com.myphotosnameapp.myphotoswebbackend.dtos.CeremonyDto;
 import co.com.myphotosnameapp.myphotoswebbackend.services.ICeremonyService;
 import co.com.myphotosnameapp.myphotoswebbackend.usecases.ICeremonyPatchUseCase;
+import co.com.myphotosnameapp.myphotoswebbackend.utilities.Utilities;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,8 @@ public class CeremonyPatchUseCase implements ICeremonyPatchUseCase {
     @Autowired
     ICeremonyService service ;
 
+    String idProvider = Utilities.PROVIDER_ID ;
+
     @Override
     public ResponseEntity patch(String id, CeremonyDto ceremonyDto) {
 
@@ -30,20 +33,23 @@ public class CeremonyPatchUseCase implements ICeremonyPatchUseCase {
                 throw new IllegalArgumentException("ceremony does not exist!");
             }
             CeremonyDto old = ceremony.get();
+
             old.setCustomerId(this.realValue(old.getCustomerId(), ceremonyDto.getCustomerId()));
-            old.setStatus(this.realValue(old.getStatus(), ceremonyDto.getStatus()));
+            if(ceremonyDto.getStatus() != null)
+                old.setStatus(ceremonyDto.getStatus());
+
             old.setTitle(this.realValue(old.getTitle(), ceremonyDto.getTitle()));
-            old.setModifiedBy(ceremonyDto.getModifiedBy());
+            old.setModifiedBy(ceremonyDto.getModifiedBy() != null ? ceremonyDto.getModifiedBy() : idProvider);
             old.setModifiedDate(LocalDateTime.now());
             old.setDescription(this.realValue(old.getDescription(), ceremonyDto.getDescription()));
 
-            service.update(ceremonyDto);
+            service.update(old);
 
-            return new ResponseEntity(HttpStatus.ACCEPTED);
+            return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
         }catch (Exception e){
             log.error(e.getMessage(), e);
         }
-        return new ResponseEntity(HttpStatus.NOT_MODIFIED);
+        return new ResponseEntity<Void>(HttpStatus.NOT_MODIFIED);
     }
 
     private String realValue(String oldValue, String newValue){
