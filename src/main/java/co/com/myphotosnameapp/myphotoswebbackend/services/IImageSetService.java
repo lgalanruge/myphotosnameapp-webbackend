@@ -2,6 +2,7 @@ package co.com.myphotosnameapp.myphotoswebbackend.services;
 
 import co.com.myphotosnameapp.myphotoswebbackend.dtos.ImageSetDto;
 
+import jakarta.transaction.Transactional;
 import jakarta.transaction.TransactionalException;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public interface IImageSetService {
 
     void update(String id, ImageSetDto input) throws TransactionalException;
 
+    @Transactional
     void updateAll(List<ImageSetDto> inputList) throws TransactionalException;
 
     List<ImageSetDto> searchImageSetDtos(ImageSetDto image);

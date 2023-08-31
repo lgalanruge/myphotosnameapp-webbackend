@@ -8,10 +8,8 @@ import co.com.myphotosnameapp.myphotoswebbackend.services.IRequestService;
 import co.com.myphotosnameapp.myphotoswebbackend.utilities.IUtilityMapper;
 import co.com.myphotosnameapp.myphotoswebbackend.utilities.Utilities;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
+import jakarta.transaction.Transactional;
 import jakarta.transaction.TransactionalException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +72,18 @@ public class RequestService implements IRequestService {
             predicates.add(criteriaBuilder.equal(root.get("customerId"), requestDto.getCustomerId()));
         }
 
+        if (requestDto.getCeremonyId() != null){
+            Join<RequestEntity, CeremonyEntity> ceremony = root.join("ceremonyId");
+
+            if(requestDto.getCeremonyId().getId() != null){
+                predicates.add(criteriaBuilder.equal(ceremony.get("id"), requestDto.getCeremonyId().getId()));
+            }
+
+            if(requestDto.getCeremonyId().getEventDate() != null){
+                predicates.add(criteriaBuilder.equal(ceremony.get("eventDate"), requestDto.getCeremonyId().getEventDate()));
+            }
+
+        }
 
         query.select(root).where(predicates.toArray(new Predicate[0]));
         return entityManager
@@ -81,9 +91,10 @@ public class RequestService implements IRequestService {
                 .getResultList()
                 .stream()
                 .map(value ->  mapper.toDto(value))
-                .collect(Collectors.toList());
+                .toList();
     }
 
+    @Transactional
     @Override
     public String create(RequestDto requestDto) throws TransactionalException {
         try {
@@ -108,6 +119,7 @@ public class RequestService implements IRequestService {
         }
     }
 
+    @Transactional
     @Override
     public String update(RequestDto requestDto) throws TransactionalException {
         try {

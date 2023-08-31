@@ -1,5 +1,6 @@
 package co.com.myphotosnameapp.myphotoswebbackend.usecases.implementation;
 
+import co.com.myphotosnameapp.myphotoswebbackend.dtos.CeremonyDto;
 import co.com.myphotosnameapp.myphotoswebbackend.dtos.RequestDto;
 import co.com.myphotosnameapp.myphotoswebbackend.services.IRequestService;
 import co.com.myphotosnameapp.myphotoswebbackend.usecases.IRequestGetUseCase;
@@ -10,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -21,12 +24,17 @@ public class RequestGetUseCase implements IRequestGetUseCase{
     @Autowired
     IRequestService service ;
 
+    @Autowired
+    DateTimeFormatter formatter ;
+
     @Override
     public ResponseEntity<List<RequestDto>> get(Map<String, String> allParams) {
         RequestDto requestDto = new RequestDto();
         if(allParams.isEmpty()){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+        requestDto.setCeremonyId(new CeremonyDto());
 
         allParams
                 .forEach(
@@ -55,6 +63,13 @@ public class RequestGetUseCase implements IRequestGetUseCase{
                                     break;
                                 case("size"):
                                     requestDto.setSize(Integer.valueOf(value));
+                                    break;
+                                case("ceremonyId"):
+                                    requestDto.getCeremonyId().setId(value);
+                                    break;
+                                case("eventDate"):
+                                    LocalDate ld = LocalDate.parse(value, formatter);
+                                    requestDto.getCeremonyId().setEventDate(ld);
                                     break;
                                 default:
                                     break;

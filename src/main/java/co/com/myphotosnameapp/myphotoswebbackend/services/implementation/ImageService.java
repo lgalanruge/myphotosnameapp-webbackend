@@ -6,6 +6,8 @@ import co.com.myphotosnameapp.myphotoswebbackend.repositories.ImageRepository;
 import co.com.myphotosnameapp.myphotoswebbackend.services.IImageService;
 import co.com.myphotosnameapp.myphotoswebbackend.utilities.IUtilityMapper;
 import co.com.myphotosnameapp.myphotoswebbackend.utilities.Utilities;
+import jakarta.transaction.Transactional;
+import jakarta.transaction.TransactionalException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,6 +99,34 @@ public class ImageService implements IImageService {
         return Optional.of(dto);
     }
 
+    @Transactional
+    @Override
+    public void update(ImageDto imageDto)  throws TransactionalException {
+        try {
+            ImageEntity entity = mapper.toEntity(imageDto);
+            repository.save(entity);
+        }catch (Exception e){
+            throw new TransactionalException(e.getMessage(), e);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void updateAll(List<ImageDto> images) throws TransactionalException {
+        try {
+            List<ImageEntity> imageEntities = images
+                    .stream()
+                    .map(value -> mapper.toEntity(value))
+                    .toList();
+
+            log.info("image list: {}", images);
+            repository.saveAll(imageEntities);
+        }catch (Exception e){
+            log.error(e.getMessage(), e);
+            throw new TransactionalException(e.getMessage(), e);
+        }
+
+    }
 
 
 }

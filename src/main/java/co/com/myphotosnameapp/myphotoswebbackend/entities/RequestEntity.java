@@ -20,8 +20,10 @@ public class RequestEntity {
     @Column(name = "status", length = 50)
     private CeremonyStatus status;
 
-    @Column(name = "ceremony_id", length = 30)
-    private String ceremonyId;
+
+    @ManyToOne
+    @JoinColumn(name = "ceremony_id")
+    private CeremonyEntity ceremonyId;
 
     @Column(name = "created_by", length = 100, nullable = false)
     private String createdBy;

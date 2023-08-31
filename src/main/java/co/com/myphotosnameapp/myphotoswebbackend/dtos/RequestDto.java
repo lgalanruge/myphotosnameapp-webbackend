@@ -15,8 +15,6 @@ public class RequestDto {
 
     private CeremonyStatus status;
 
-    private String ceremonyId;
-
     private String createdBy;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -38,5 +36,8 @@ public class RequestDto {
     @Transient
     @JsonIgnore
     private int size ;
+
+    private CeremonyDto ceremonyId ;
+
 
 }

@@ -37,7 +37,11 @@ public class RequestPatchUseCase implements IRequestPatchUseCase {
             if(request.getStatus()!=null)
                 old.setStatus(request.getStatus());
 
-            old.setCeremonyId(this.realValue(old.getCeremonyId(), request.getCeremonyId()));
+            if(request.getCeremonyId() != null){
+                if(!request.getCeremonyId().getId().equals(old.getCeremonyId().getId())){
+                    old.setCeremonyId(request.getCeremonyId());
+                }
+            }
             old.setModifiedBy(request.getModifiedBy()!= null ? request.getModifiedBy() : idProvider);
             old.setModifiedDate(LocalDateTime.now());
 
