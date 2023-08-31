@@ -14,4 +14,6 @@ public class AssignImageDto implements Serializable {
 
     private ImageProcessStatus status ;
 
+    private String imageSetId ;
+
 }

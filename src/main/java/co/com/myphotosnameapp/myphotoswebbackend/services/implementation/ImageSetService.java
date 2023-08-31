@@ -159,6 +159,9 @@ public class ImageSetService implements IImageSetService {
         Root<ImageSetEntity> root = query.from(ImageSetEntity.class);
         List<Predicate> predicates = new ArrayList<>();
 
+        if (image.getId() != null) {
+            predicates.add(criteriaBuilder.equal(root.get("id"), image.getId()));
+        }
         if (image.getImageSourceId() != null) {
             predicates.add(criteriaBuilder.equal(root.get("imageSourceId"), image.getImageSourceId()));
         }

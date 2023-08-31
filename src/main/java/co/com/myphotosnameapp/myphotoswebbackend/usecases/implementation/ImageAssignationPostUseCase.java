@@ -75,7 +75,14 @@ public class ImageAssignationPostUseCase implements IImageAssignationPostUseCase
     @Override
     public ResponseEntity<Void> makeImageAssignation(AssignImageDto image) {
         try {
-            makeAssignation(image);
+            switch (image.getStatus()){
+                case ACCEPTED -> makeAcceptedAssignation(image);
+                case REJECTED -> makeRejectedAssignation(image);
+                default -> throw new IllegalArgumentException("image status not implemented!");
+
+            }
+
+
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -84,22 +91,18 @@ public class ImageAssignationPostUseCase implements IImageAssignationPostUseCase
     }
 
     @Transactional
-    private void makeAssignation(AssignImageDto assignedImage) throws TransactionalException {
+    private void makeAcceptedAssignation(AssignImageDto assignedImage) throws TransactionalException {
 
         try {
 
             log.info("Start process: {}", assignedImage);
-            Optional<ImageDto> isImage = imageService.getById(assignedImage.getImageId());
-            if (!isImage.isPresent()) {
-                throw new IllegalArgumentException("Image does not exist!");
-            }
-            log.info("isImage: {}", isImage.get());
+            ImageDto parentImage = findImageById(assignedImage.getImageId());
 
-            Optional<RequestDto> isRequest = requestService.read(assignedImage.getRequestId());
-            if (!isRequest.isPresent()) {
-                throw new IllegalArgumentException("Request does not exist!");
-            }
-            log.info("isRequest: {}", isRequest.get());
+            log.info("isImage: {}", parentImage);
+
+            RequestDto requestDto = findRequestById(assignedImage.getRequestId());
+
+            log.info("isRequest: {}", requestDto);
 
             log.info("search image association. ");
             ImageSetDto imageSetDto = new ImageSetDto();
@@ -118,11 +121,11 @@ public class ImageAssignationPostUseCase implements IImageAssignationPostUseCase
 
             List<ImageDto> images = imageSetDtoList
                     .stream()
-                    .map(value -> convertImageSetToImageFunction.apply(value, isRequest.get()))
+                    .map(value -> convertImageSetToImageFunction.apply(value, requestDto))
                     .toList();
 
             log.info("image list: {} without parent ", images);
-            ImageDto parentImage = getAcceptedImage(isImage.get(), isRequest.get());
+            parentImage = getAcceptedImage(parentImage, requestDto);
 
             log.info("update parent Image {} ", parentImage);
             imageService.update(parentImage);
@@ -131,7 +134,6 @@ public class ImageAssignationPostUseCase implements IImageAssignationPostUseCase
             imageService.updateAll(images);
 
             log.info("Updating request");
-            RequestDto requestDto = isRequest.get();
             requestDto.setStatus(CeremonyStatus.DONE);
             requestDto.setModifiedDate(LocalDateTime.now());
             requestDto.setModifiedBy(providerId);
@@ -160,6 +162,66 @@ public class ImageAssignationPostUseCase implements IImageAssignationPostUseCase
         } catch (RuntimeException e) {
             log.error(e.getMessage(), e);
             throw new TransactionalException(e.getMessage(), e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new TransactionalException(e.getMessage(), e);
+        }
+
+    }
+
+    @Transactional
+    private void makeRejectedAssignation(AssignImageDto assignedImage) throws TransactionalException {
+
+        try {
+
+            log.info("Start process: {}", assignedImage);
+
+            ImageDto parentImage = findImageById(assignedImage.getImageId());
+
+            log.info("isImage: {}", parentImage);
+
+            RequestDto requestDto = findRequestById(assignedImage.getRequestId());
+
+            log.info("isRequest: {}", requestDto);
+
+            log.info("search image association. ");
+            ImageSetDto imageSetDto = new ImageSetDto();
+            imageSetDto.setId(assignedImage.getImageSetId());
+
+            List<ImageSetDto> imageSetDtoList = imageSetService.searchImageSetDtos(imageSetDto);
+            log.info("these are image association: {} ", imageSetDtoList);
+            imageSetDtoList
+                    .stream()
+                    .forEach(updateImageSetConsumerFunctional);
+
+            log.info("these are new image association {} the new state is {}", imageSetDtoList, ImageProcessStatus.ASSIGNED);
+            imageSetService.updateAll(imageSetDtoList);
+
+            List<ImageDto> images = imageSetDtoList
+                    .stream()
+                    .map(value -> convertImageSetToImageFunction.apply(value, requestDto))
+                    .toList();
+
+            log.info("image list: {} without parent ", images);
+            parentImage = getAcceptedImage(parentImage, requestDto);
+
+            log.info("update parent Image {} ", parentImage);
+            imageService.update(parentImage);
+
+            log.info("update children images. list: {} ", images);
+            imageService.updateAll(images);
+
+            log.info("Updating request");
+
+            requestDto.setStatus(CeremonyStatus.DONE);
+            requestDto.setModifiedDate(LocalDateTime.now());
+            requestDto.setModifiedBy(providerId);
+            log.info("Ready request: {}", requestDto);
+            requestService.update(requestDto);
+
+        } catch (RuntimeException e) {
+            log.error(e.getMessage(), e);
+            throw new TransactionalException(e.getMessage(), e);
         }
 
     }
@@ -179,6 +241,22 @@ public class ImageAssignationPostUseCase implements IImageAssignationPostUseCase
         parentImage.setModifiedDate(LocalDateTime.now());
         parentImage.setModifiedBy(providerId);
         return parentImage;
+    }
+
+    private ImageDto findImageById(String id) throws IllegalArgumentException{
+        Optional<ImageDto> isImage = imageService.getById(id);
+        if (!isImage.isPresent()) {
+            throw new IllegalArgumentException("Image does not exist!");
+        }
+        return isImage.get();
+    }
+
+    private RequestDto findRequestById(String id) throws IllegalArgumentException {
+        Optional<RequestDto> isRequest = requestService.read(id);
+        if (!isRequest.isPresent()) {
+            throw new IllegalArgumentException("Request does not exist!");
+        }
+        return isRequest.get();
     }
 
 
