@@ -27,6 +27,8 @@ public class MyPhotosWebBackendApplication {
 						.allowedOrigins(url);
 				registry.addMapping("/request")
 						.allowedOrigins(url);
+				registry.addMapping("/assign")
+						.allowedOrigins(url);
 			}
 		};
 	}
