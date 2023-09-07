@@ -15,25 +15,19 @@ import org.springframework.stereotype.Service;
 public class ImageSetPatchUseCase implements IImageSetPatchUseCase {
 
     @Autowired
-    IImageSetService service ;
+    IImageSetService service;
 
     @Override
-    public ResponseEntity<ImageSetDto> patch(String id, ImageSetDto imageSet){
-        try{
+    public ResponseEntity<ImageSetDto> patch(String id, ImageSetDto imageSet) {
+        try {
             service.update(id, imageSet);
-
-            // HttpHeaders responseHeaders = new HttpHeaders();
-            // responseHeaders.set("Access-Control-Allow-Origin", "*");
-
             return ResponseEntity
                     .accepted()
-                    // .headers(responseHeaders)
                     .build();
-
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 
 }

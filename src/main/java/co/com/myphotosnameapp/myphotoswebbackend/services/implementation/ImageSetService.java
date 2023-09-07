@@ -47,7 +47,7 @@ public class ImageSetService implements IImageSetService {
         return setList
                 .stream()
                 .map(value -> mapper.toDto(value))
-                .collect(Collectors.toList());
+                .toList();
 
     }
 
@@ -64,7 +64,7 @@ public class ImageSetService implements IImageSetService {
                         entity.setCreatedDate(LocalDateTime.now());
                         return entity;
                     })
-                    .collect(Collectors.toList());
+                    .toList();
 
             log.info("Entity list {}", entList);
             repository.saveAll(entList);
@@ -73,7 +73,7 @@ public class ImageSetService implements IImageSetService {
                     .stream()
                     .map(value -> mapper.toDto(value))
                     .collect(Collectors.toMap(Function.identity(),
-                            value -> value.getId()));
+                            ImageSetDto::getId));
             log.info("DTO list {}", mapOutput);
 
             return mapOutput;
@@ -105,7 +105,7 @@ public class ImageSetService implements IImageSetService {
             previousEntity.setModifiedDate(LocalDateTime.now());
 
             previousEntity.setName(getRealStringValue(previousEntity.getName(), newEntity.getName()));
-            previousEntity.setStatus(getRealStringValue(previousEntity.getStatus(), newEntity.getStatus()));
+            previousEntity.setStatus(newEntity.getStatus());
             previousEntity.setImageSourceId(getRealStringValue(previousEntity.getImageSourceId(), newEntity.getImageSourceId()));
             previousEntity.setImageDestinationId(getRealStringValue(previousEntity.getImageDestinationId(), newEntity.getImageDestinationId()));
 
@@ -130,7 +130,7 @@ public class ImageSetService implements IImageSetService {
                         entity.setModifiedDate(LocalDateTime.now());
                         return entity;
                     })
-                    .collect(Collectors.toList());
+                    .toList();
 
             repository.saveAll(entList);
         }catch (Exception e){
@@ -149,7 +149,7 @@ public class ImageSetService implements IImageSetService {
         return list
                 .stream()
                 .map(mapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<ImageSetEntity> searchImageSetEntities(ImageSetEntity image) {
@@ -159,6 +159,9 @@ public class ImageSetService implements IImageSetService {
         Root<ImageSetEntity> root = query.from(ImageSetEntity.class);
         List<Predicate> predicates = new ArrayList<>();
 
+        if (image.getId() != null) {
+            predicates.add(criteriaBuilder.equal(root.get("id"), image.getId()));
+        }
         if (image.getImageSourceId() != null) {
             predicates.add(criteriaBuilder.equal(root.get("imageSourceId"), image.getImageSourceId()));
         }

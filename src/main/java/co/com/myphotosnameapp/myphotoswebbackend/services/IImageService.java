@@ -1,23 +1,28 @@
 package co.com.myphotosnameapp.myphotoswebbackend.services;
 
 import co.com.myphotosnameapp.myphotoswebbackend.dtos.ImageDto;
+import jakarta.transaction.TransactionalException;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface IImageService {
 
-    public Optional<ImageDto> getById(String id);
+    Optional<ImageDto> getById(String id);
 
-    public Optional<List<ImageDto>> getByName(String name);
+    Optional<List<ImageDto>> getByName(String name);
 
-    public Optional<List<ImageDto>> getByStatus(String status);
+    Optional<List<ImageDto>> getByStatus(String status);
 
-    public Optional<List<ImageDto>> getByOwner(String owner);
+    Optional<List<ImageDto>> getByCustomerId(String customerId);
 
-    public Optional<List<ImageDto>> getByCompany(String company);
+    Optional<List<ImageDto>> getByProviderId(String providerId);
 
-    public Optional<List<ImageDto>> getBySourceDirectory(String sourceDirectory);
+    Optional<List<ImageDto>> getBySourceDirectory(String sourceDirectory);
+
+    public void update(ImageDto imageDto) throws TransactionalException;
+
+    public void updateAll(List<ImageDto> images) throws TransactionalException;
 
 
 

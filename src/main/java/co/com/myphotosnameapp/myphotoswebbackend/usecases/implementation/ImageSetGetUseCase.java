@@ -3,6 +3,7 @@ package co.com.myphotosnameapp.myphotoswebbackend.usecases.implementation;
 import co.com.myphotosnameapp.myphotoswebbackend.dtos.ImageSetDto;
 import co.com.myphotosnameapp.myphotoswebbackend.services.IImageSetService;
 import co.com.myphotosnameapp.myphotoswebbackend.usecases.IImageSetGetUseCase;
+import co.com.myphotosnameapp.myphotoswebbackend.utilities.ImageProcessStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class ImageSetGetUseCase implements IImageSetGetUseCase {
             else
                 return ResponseEntity.notFound().build();
         }catch (Exception e){
-
+            log.error(e.getMessage(), e);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
@@ -43,7 +44,7 @@ public class ImageSetGetUseCase implements IImageSetGetUseCase {
     @Override
     public ResponseEntity<List<ImageSetDto>> get(Map<String, String> allParams) {
         if(allParams == null || allParams.isEmpty())
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         if(allParams.containsKey("id")){
             return get(allParams.get("id"));
@@ -65,7 +66,7 @@ public class ImageSetGetUseCase implements IImageSetGetUseCase {
                     dto.setName(value);
                     break;
                 case "status":
-                    dto.setStatus(value);
+                    dto.setStatus(ImageProcessStatus.valueOf(value));
                     break;
                 case "createdBy":
                     dto.setCreatedBy(value);
@@ -85,13 +86,15 @@ public class ImageSetGetUseCase implements IImageSetGetUseCase {
                         log.error(e.getMessage(),e);
                     }
                     break;
+                default:
+                    break;
             }
         });
         log.info("params: {}" , dto);
 
         List<ImageSetDto> list = service.searchImageSetDtos(dto);
         if (list.isEmpty())
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         else
             return ResponseEntity.ok(list);
     }

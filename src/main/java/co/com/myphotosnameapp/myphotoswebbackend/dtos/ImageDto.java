@@ -1,9 +1,12 @@
 package co.com.myphotosnameapp.myphotoswebbackend.dtos;
 
+import co.com.myphotosnameapp.myphotoswebbackend.utilities.ImageStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -18,7 +21,7 @@ public class ImageDto implements Serializable {
 
     private String sourceDirectory;
 
-    private String status;
+    private ImageStatus status;
 
     @JsonIgnore
     private String createdBy;
@@ -32,11 +35,14 @@ public class ImageDto implements Serializable {
     @JsonIgnore
     private LocalDateTime modifiedDate;
 
-    @JsonIgnore
-    private CompanyDto company;
+    @Column(name = "provider_id", length = 30)
+    private String providerId;
 
-    @JsonIgnore
-    private OwnerDto owner;
+    @Column(name = "customer_id", length = 30)
+    private String customerId;
+
+    @Column(name = "image_date", length = 30)
+    private LocalDate imageDate ;
 
 
 }

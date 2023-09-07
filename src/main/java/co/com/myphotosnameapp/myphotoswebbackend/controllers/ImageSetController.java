@@ -40,7 +40,7 @@ public class ImageSetController {
     }
 
     @PutMapping("")
-    public ResponseEntity<ImageSetDto> put(@RequestBody List<ImageSetDto> imageSet){
+    public ResponseEntity<Void> put(@RequestBody List<ImageSetDto> imageSet){
         return putUseCase.put(imageSet);
     }
 

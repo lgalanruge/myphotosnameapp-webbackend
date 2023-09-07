@@ -5,16 +5,24 @@ import co.com.myphotosnameapp.myphotoswebbackend.entities.*;
 
 public interface IUtilityMapper {
 
-    CompanyDto toDto(CompanyEntity entity);
+
     ImageDto toDto(ImageEntity entity);
     ImageSetDto toDto(ImageSetEntity entity);
-    OwnerDto toDto(OwnerEntity entity);
+
     PersonDto toDto(PersonEntity entity);
 
-    CompanyEntity  toEntity(CompanyDto dto);
+    CeremonyDto toDto(CeremonyEntity entity);
+
+    RequestDto toDto(RequestEntity entity);
+
     ImageEntity  toEntity(ImageDto dto);
     ImageSetEntity  toEntity(ImageSetDto dto);
-    OwnerEntity  toEntity(OwnerDto dto);
+
     PersonEntity  toEntity(PersonDto dto);
+
+    CeremonyEntity  toEntity(CeremonyDto dto);
+
+    RequestEntity  toEntity(RequestDto dto);
+
 
 }

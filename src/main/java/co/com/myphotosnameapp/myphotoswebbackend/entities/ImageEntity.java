@@ -1,9 +1,11 @@
 package co.com.myphotosnameapp.myphotoswebbackend.entities;
 
+import co.com.myphotosnameapp.myphotoswebbackend.utilities.ImageStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -23,8 +25,9 @@ public class ImageEntity implements Serializable {
     @Column(name = "SOURCE_DIRECTORY", length = 200)
     private String sourceDirectory;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "STATUS", length = 50)
-    private String status;
+    private ImageStatus status;
 
     @Column(name = "CREATED_BY")
     private String createdBy;
@@ -38,14 +41,14 @@ public class ImageEntity implements Serializable {
     @Column(name = "MODIFIED_DATE")
     private LocalDateTime modifiedDate;
 
+    @Column(name = "provider_id", length = 30)
+    private String providerId;
 
-    @ManyToOne
-    @JoinColumn(name = "COMPANY_ID", foreignKey = @ForeignKey(name = "FK_IMAGE_COMPANY"))
-    private CompanyEntity company;
+    @Column(name = "customer_id", length = 30)
+    private String customerId;
 
-    @ManyToOne
-    @JoinColumn(name = "OWNER_ID", foreignKey = @ForeignKey(name = "FK_IMAGE_OWNER"))
-    private OwnerEntity owner;
+    @Column(name = "image_date", length = 30)
+    private LocalDate imageDate ;
 
 
 }
